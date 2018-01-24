@@ -1,0 +1,45 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    static int hackerlandRadioTransmitters(int[] x, int k) {
+        int count = 0;
+        Arrays.sort(x);
+        int i = 0;
+        while(i < x.length){
+            int j = i;
+            while(j < x.length && x[j]-x[i]<=k){
+                j++;
+            }
+            j--;//put one transmitter at j. this transmitter will cover its' left (j-i+1)houses. Also this transmitter will cover
+            //its' right (m-j) houses
+           
+            count++;
+            int m = j;
+            while(m < x.length && x[m] - x[j] <= k){
+                m++;
+            }
+            i = m;
+        }
+        
+      return count;  
+        
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int k = in.nextInt();
+        int[] x = new int[n];
+        for(int x_i = 0; x_i < n; x_i++){
+            x[x_i] = in.nextInt();
+        }
+        int result = hackerlandRadioTransmitters(x, k);
+        System.out.println(result);
+        in.close();
+    }
+}
