@@ -1,0 +1,80 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    static Long gridlandMetro(long n, long m, int k, long[][] track) {
+        // Complete this function
+        
+        int ans = 0;
+        Map<Long, ArrayList<ArrayList<Long>>> map = new HashMap<>();
+        //put all intervals into map
+        for(int i = 0; i < k; i++){
+            long row = track[i][0];
+            long col1 = track[i][1];
+            long col2 = track[i][2];
+            ArrayList<Long> arr = new ArrayList<Long>();
+            arr.add(col1);
+            arr.add(col2);
+            if(map.containsKey(row)){
+               ArrayList<ArrayList<Long>> listTrains = map.get(row);
+               for(ArrayList<Long> train: listTrains){
+                   //if overlap
+                  if(col1<=train.get(0) && col2>=train.get(0) && col2 <= train.get(1)) {
+                      train.set(0,col1);
+                      break;
+                  }
+                  if(col1>=train.get(0) && col1<=train.get(1) && col2 >= train.get(1)){
+                      train.set(1,col2);
+                      break;
+                  }
+                  if(col1<=train.get(0) && col2 >= train.get(2)){
+                      train.set(0,col1);
+                      train.set(1,col2);
+                      break;
+                  }
+                  if(col1>=train.get(0) && col2>=train.get(0) && col2 <= train.get(1)){
+                      break;
+                  }
+                  //no overlap
+                  else{
+                      listTrains.add(arr);
+                      break;
+                  } 
+               }
+            }else {
+                ArrayList<ArrayList<Long>> listTrains = new ArrayList<>();
+                listTrains.add(arr);
+                map.put(row,listTrains);
+            }
+        }
+        long sum = 0;
+        for(Long key: map.keySet()){
+            for(ArrayList<Long> ls:map.get(key)){
+                sum = sum+ls.get(1)-ls.get(0)+1;
+            }
+        }
+       return m*n-sum;
+    }
+    
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        long n = in.nextInt();
+        long m = in.nextInt();
+        int k = in.nextInt();
+        long[][] track = new long[k][3];
+        for(int track_i = 0; track_i < k; track_i++){
+            for(int track_j = 0; track_j < 3; track_j++){
+                track[track_i][track_j] = in.nextInt();
+            }
+        }
+        long result = gridlandMetro(n, m, k, track);
+        System.out.println(result);
+        in.close();
+    }
+}
+
