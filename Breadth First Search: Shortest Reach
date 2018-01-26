@@ -1,0 +1,73 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+    static int[] bfs(int n, int m, int[][] edges, int s) {
+        // Complete this function. n is the number of nodes. m is the number of edges. s is the starting node.
+        //initialize the return array
+        int[] res = new int[n+1];// only need node 1 ~ n
+        for(int i = 1; i < n+1; i++){
+            res[i] = -1;
+        }
+        res[s] = 0;
+        //adjacent matrix
+        int[][] matrix = new int[n+1][n+1];
+        for(int i = 0; i < m; i++){
+            matrix[edges[i][0]][edges[i][1]] = 1;
+            matrix[edges[i][1]][edges[i][0]] = 1;
+        }
+        LinkedList<Integer> q = new LinkedList<Integer>();
+        boolean[] visited = new boolean[n+1];
+        q.add(s);
+        visited[s] = true;
+        while(q.size()!=0){
+            int tmp = q.poll();
+            for(int i = 1; i < n+1; i++){
+                if(matrix[tmp][i] == 1 && visited[i] == false){
+                    //exist the edge: tmp -> i
+                    res[i] = res[tmp]+6;
+                    q.add(i);
+                    visited[i] = true;
+                }
+            }
+        }
+        
+        int[] ans = new int[n-1];
+        int j = 0;
+        for(int i = 1; i < n+1; i++){
+            if(i != s){
+                ans[j] = res[i];
+                j++;
+            }
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int q = in.nextInt();
+        for(int a0 = 0; a0 < q; a0++){
+            int n = in.nextInt();
+            int m = in.nextInt();
+            int[][] edges = new int[m][2];
+            for(int edges_i = 0; edges_i < m; edges_i++){
+                for(int edges_j = 0; edges_j < 2; edges_j++){
+                    edges[edges_i][edges_j] = in.nextInt();
+                }
+            }
+            int s = in.nextInt();
+            int[] result = bfs(n, m, edges, s);
+            for (int i = 0; i < result.length; i++) {
+               System.out.print(result[i] + (i != result.length - 1 ? " " : ""));
+            }
+            System.out.println("");
+
+
+        }
+        in.close();
+    }
+    
+}
